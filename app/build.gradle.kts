@@ -1,6 +1,9 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    kotlin("kapt")
+    id("com.google.dagger.hilt.android")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -55,8 +58,13 @@ dependencies {
     implementation(libs.bundles.android.core)
     implementation(platform("androidx.compose:compose-bom:2023.08.00"))
 
+    //Hilt
+    implementation(libs.bundles.hilt)
+    kapt(libs.hilt.compiler)
+
     // Testing
     testImplementation(testLibs.bundles.local)
     androidTestImplementation(testLibs.bundles.instrumented)
     debugImplementation(testLibs.bundles.ui.compose)
+    androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
 }

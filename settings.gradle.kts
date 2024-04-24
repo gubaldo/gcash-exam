@@ -15,11 +15,16 @@ dependencyResolutionManagement {
     versionCatalogs {
 
         create("libs") {
+
             version("coreVersion", "1.13.0")
             version("lifecycleVersion", "2.7.0")
             version("composeActivityVersion", "1.9.0")
             version("composeVersion", "1.6.6")
             version("composeMaterial3Version", "1.2.1")
+            version("coroutinesVersion", "1.8.0")
+            version("hiltVersion", "2.49")
+            version("hiltNavigationVersion", "1.2.0")
+            version("hiltCompilerVersion", "2.45")
 
             // Android Core
             library(
@@ -60,6 +65,32 @@ dependencyResolutionManagement {
                 "material3"
             ).versionRef("composeMaterial3Version")
 
+            // Coroutines
+            library(
+                "coroutines",
+                "org.jetbrains.kotlinx",
+                "kotlinx-coroutines-android"
+            ).versionRef(
+                "coroutinesVersion"
+            )
+
+            // Hilt
+            library(
+                "hilt-android",
+                "com.google.dagger",
+                "hilt-android"
+            ).versionRef("hiltVersion")
+            library(
+                "hilt-navigation",
+                "androidx.hilt",
+                "hilt-navigation-compose"
+            ).versionRef("hiltNavigationVersion")
+            library(
+                "hilt-compiler",
+                "com.google.dagger",
+                "hilt-android-compiler"
+            ).versionRef("hiltCompilerVersion")
+
             // Bundles
             bundle(
                 "android-core", listOf(
@@ -70,9 +101,15 @@ dependencyResolutionManagement {
                     "compose-ui-graphics",
                     "compose-ui-tooling-preview",
                     "compose-material3",
+                    "coroutines"
                 )
             )
-
+            bundle(
+                "hilt", listOf(
+                    "hilt-android",
+                    "hilt-navigation"
+                )
+            )
         }
 
         create("testLibs") {
@@ -137,7 +174,6 @@ dependencyResolutionManagement {
                     "compose-ui-test-manifest"
                 )
             )
-
         }
 
     }
@@ -146,4 +182,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Weather App"
 include(":app")
- 
