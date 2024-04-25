@@ -30,6 +30,8 @@ dependencyResolutionManagement {
             version("firebaseAuthVersion", "22.3.1")
             version("retrofitVersion", "2.11.0")
             version("loggingInterceptorVersion", "4.12.0")
+            version("roomVersion", "2.5.2")
+            version("accompanistVersion", "0.25.0")
 
             // Android Core
             library(
@@ -113,6 +115,47 @@ dependencyResolutionManagement {
                 "firebase-auth-ktx"
             ).versionRef("firebaseAuthVersion")
 
+            // Retrofit
+            library(
+                "retrofit",
+                "com.squareup.retrofit2",
+                "retrofit"
+            ).versionRef("retrofitVersion")
+            library(
+                "retrofit-gson",
+                "com.squareup.retrofit2",
+                "converter-gson"
+            ).versionRef("retrofitVersion")
+            library(
+                "logging-interceptor",
+                "com.squareup.okhttp3",
+                "logging-interceptor"
+            ).versionRef("loggingInterceptorVersion")
+
+            // Room
+            library(
+                "room-runtime",
+                "androidx.room",
+                "room-runtime"
+            ).versionRef("roomVersion")
+            library(
+                "room-ktx",
+                "androidx.room",
+                "room-ktx"
+            ).versionRef("roomVersion")
+            library(
+                "room-compiler",
+                "androidx.room",
+                "room-compiler"
+            ).versionRef("roomVersion")
+
+            // Accompanist Permission
+            library(
+                "accompanist-permission",
+                "com.google.accompanist",
+                "accompanist-permissions"
+            ).versionRef("accompanistVersion")
+
             // Bundles
             bundle(
                 "android-core", listOf(
@@ -137,6 +180,19 @@ dependencyResolutionManagement {
                 "firebase", listOf(
                     "firebase-analytics",
                     "firebase-auth"
+                )
+            )
+            bundle(
+                "retrofit", listOf(
+                    "retrofit",
+                    "retrofit-gson",
+                    "logging-interceptor"
+                )
+            )
+            bundle(
+                "room", listOf(
+                    "room-runtime",
+                    "room-ktx"
                 )
             )
         }

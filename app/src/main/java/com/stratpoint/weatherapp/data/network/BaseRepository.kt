@@ -1,6 +1,10 @@
 package com.stratpoint.weatherapp.data.network
 
+import com.google.gson.Gson
+import com.google.gson.annotations.SerializedName
+import com.google.gson.reflect.TypeToken
 import com.stratpoint.weatherapp.BuildConfig
+import retrofit2.HttpException
 import java.net.UnknownHostException
 
 abstract class BaseRepository {
@@ -15,9 +19,16 @@ abstract class BaseRepository {
 
         val exception = ServiceException(
             when (e) {
-                is UnknownHostException -> {
+                is UnknownHostException, is RetrofitBuilder.NoInternetInterceptor.NoInternetException -> {
                     ErrorResponse(
                         exceptionMessage = e.message
+                    )
+                }
+
+                is HttpException -> {
+                    ErrorResponse(
+                        e.code(),
+                        extractHttpErrorMessage(e)
                     )
                 }
 
@@ -37,12 +48,31 @@ abstract class BaseRepository {
 
     }
 
+    fun extractHttpErrorMessage(exception: HttpException) = try {
+
+        val rawErrorBody = exception.response()!!.errorBody()!!.string()
+
+        val type = object : TypeToken<GenericErrorResponse>() {}.type
+
+        val errorResponse: GenericErrorResponse = Gson().fromJson(rawErrorBody, type)
+
+        errorResponse.errors[0]
+
+    } catch (e: Exception) {
+        ERROR_SOMETHING_WENT_WRONG
+    }
+
     class ServiceException(val error: ErrorResponse) :
         RuntimeException(error.exceptionMessage)
 
     data class ErrorResponse(
         var errorCode: Int = ERROR_CODE_GENERIC,
         var exceptionMessage: String? = ERROR_SOMETHING_WENT_WRONG
+    )
+
+    //Change structure depending on agreed Error Message Format with BackEnd Team
+    data class GenericErrorResponse(
+        @SerializedName("errors") var errors: List<String>
     )
 
     companion object {

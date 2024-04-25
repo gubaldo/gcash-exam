@@ -14,8 +14,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.stratpoint.weatherapp.R
-import com.stratpoint.weatherapp.auth.login.presentation.LoginScreenContent
-import com.stratpoint.weatherapp.auth.login.presentation.rememberLoginScreenState
 import com.stratpoint.weatherapp.ui.theme.WeatherAppTheme
 
 @OptIn(ExperimentalMaterial3Api::class)

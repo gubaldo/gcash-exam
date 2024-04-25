@@ -22,4 +22,8 @@
     <string name="progress_register">Creating account</string>
     <string name="message_register_success">Registration Success!</string>
 
+    <!--    Home-->
+    <string name="label_weather_today">Weather Today</string>
+    <string name="label_weather_history">History</string>
+
 </resources>

@@ -4,8 +4,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.stratpoint.weatherapp.auth.login.presentation.LoginScreen
-import com.stratpoint.weatherapp.auth.register.presentation.RegisterScreen
+import com.stratpoint.weatherapp.presentation.auth.login.presentation.LoginScreen
+import com.stratpoint.weatherapp.presentation.auth.register.presentation.RegisterScreen
 
 fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
 
