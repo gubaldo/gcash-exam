@@ -10,11 +10,16 @@
     <string name="cd_hide_password">Hide Password</string>
     <string name="label_login">Login</string>
     <string name="label_create_account">Create an Account</string>
+    <string name="progress_login">Logging in</string>
+    <string name="message_login_success">Login Success!</string>
+    <string name="label_ok">OK</string>
 
     <!--    Register-->
     <string name="cd_arrow_back">Arrow Back</string>
     <string name="label_name">Name</string>
     <string name="error_name">Please input a name</string>
     <string name="label_register">Register</string>
+    <string name="progress_register">Creating account</string>
+    <string name="message_register_success">Registration Success!</string>
 
 </resources>

@@ -7,8 +7,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -17,9 +19,12 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.stratpoint.weatherapp.R
+import com.stratpoint.weatherapp.extensions.showToast
 import com.stratpoint.weatherapp.ui.theme.WeatherAppTheme
 import com.stratpoint.weatherapp.ui.theme.spacing
 import com.stratpoint.weatherapp.ui.views.button.CommonButton
+import com.stratpoint.weatherapp.ui.views.dialog.BasicAlertDialog
+import com.stratpoint.weatherapp.ui.views.dialog.ProgressDialog
 import com.stratpoint.weatherapp.ui.views.textfield.CommonOutlinedTextField
 import com.stratpoint.weatherapp.ui.views.textfield.PasswordOutlinedTextField
 import com.stratpoint.weatherapp.ui.views.topbar.CommonBackTopBar
@@ -48,8 +53,19 @@ fun RegisterScreen(
             validateName = viewModel::validateName,
             validateEmail = viewModel::validateEmail,
             validatePassword = viewModel::validatePassword,
-            onClickRegister = viewModel::register
+            onClickRegister = viewModel::register,
+            onDismissErrorDialog = viewModel::dismissErrorDialog
         )
+    }
+
+    val isRegisterSuccessful = viewModel.isRegisterSuccessful.collectAsState().value
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = isRegisterSuccessful) {
+        if (isRegisterSuccessful) {
+            context.showToast(context.getString(R.string.message_register_success))
+            // TODO proceed to home screen
+        }
     }
 
 }
@@ -62,7 +78,9 @@ fun RegisterScreenContent(
     validateEmail: (String) -> Unit,
     validatePassword: (String) -> Unit,
     onClickRegister: () -> Unit,
+    onDismissErrorDialog: () -> Unit
 ) {
+
     ConstraintLayout(
         modifier = modifier
             .fillMaxSize()
@@ -121,8 +139,13 @@ fun RegisterScreenContent(
             onClickRegister = onClickRegister
         )
 
-
     }
+
+    LoadingDialog(screenState = screenState)
+    ErrorDialog(
+        screenState = screenState,
+        onDismissErrorDialog = onDismissErrorDialog
+    )
 }
 
 @Composable
@@ -206,6 +229,37 @@ fun RegisterButton(
 }
 
 @Composable
+fun LoadingDialog(screenState: RegisterScreenState) {
+    val showDialog = screenState.isLoading.value
+
+    if (showDialog) {
+        ProgressDialog(
+            showDialog = true,
+            message = stringResource(id = R.string.progress_register)
+        )
+    }
+}
+
+@Composable
+fun ErrorDialog(
+    screenState: RegisterScreenState,
+    onDismissErrorDialog: () -> Unit
+) {
+    val errorMessage = screenState.errorMessage.value
+
+    errorMessage?.let {
+        BasicAlertDialog(
+            showDialog = true,
+            title = stringResource(id = R.string.app_name),
+            message = errorMessage,
+            buttonLabel = stringResource(id = R.string.label_ok)
+        ) {
+            onDismissErrorDialog()
+        }
+    }
+}
+
+@Composable
 private fun InitializeScreenState(
     screenState: RegisterScreenState,
     viewModel: RegisterViewModel
@@ -218,6 +272,8 @@ private fun InitializeScreenState(
     screenState.isValidPassword.value = viewModel.isValidPassword.collectAsState().value
     screenState.isRegisterButtonEnabled.value =
         viewModel.isRegisterButtonEnabled.collectAsState().value
+    screenState.isLoading.value = viewModel.isLoading.collectAsState().value
+    screenState.errorMessage.value = viewModel.errorMessage.collectAsState().value
 }
 
 @Preview(showBackground = true)
@@ -230,7 +286,8 @@ fun RegisterScreenPreview() {
             validateName = {},
             validateEmail = {},
             validatePassword = {},
-            onClickRegister = {}
+            onClickRegister = {},
+            onDismissErrorDialog = {}
         )
     }
 

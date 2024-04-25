@@ -10,7 +10,9 @@ class LoginScreenState(
     val isValidEmail: MutableState<Boolean>,
     val password: MutableState<String>,
     val isValidPassword: MutableState<Boolean>,
-    val isLoginButtonEnabled: MutableState<Boolean>
+    val isLoginButtonEnabled: MutableState<Boolean>,
+    val isLoading: MutableState<Boolean>,
+    val errorMessage: MutableState<String?>
 )
 
 @Composable
@@ -19,13 +21,17 @@ fun rememberLoginScreenState(
     isValidEmail: MutableState<Boolean> = mutableStateOf(false),
     password: MutableState<String> = mutableStateOf(""),
     isValidPassword: MutableState<Boolean> = mutableStateOf(false),
-    isLoginButtonEnabled: MutableState<Boolean> = mutableStateOf(false)
+    isLoginButtonEnabled: MutableState<Boolean> = mutableStateOf(false),
+    isLoading: MutableState<Boolean> = mutableStateOf(false),
+    errorMessage: MutableState<String?> = mutableStateOf(null)
 ) = remember {
     LoginScreenState(
         email = email,
         isValidEmail = isValidEmail,
         password = password,
         isValidPassword = isValidPassword,
-        isLoginButtonEnabled = isLoginButtonEnabled
+        isLoginButtonEnabled = isLoginButtonEnabled,
+        isLoading = isLoading,
+        errorMessage = errorMessage
     )
 }

@@ -8,8 +8,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -21,10 +23,13 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.stratpoint.weatherapp.R
+import com.stratpoint.weatherapp.extensions.showToast
 import com.stratpoint.weatherapp.navigation.AuthScreen
 import com.stratpoint.weatherapp.ui.theme.WeatherAppTheme
 import com.stratpoint.weatherapp.ui.theme.spacing
 import com.stratpoint.weatherapp.ui.views.button.CommonButton
+import com.stratpoint.weatherapp.ui.views.dialog.BasicAlertDialog
+import com.stratpoint.weatherapp.ui.views.dialog.ProgressDialog
 import com.stratpoint.weatherapp.ui.views.textfield.CommonOutlinedTextField
 import com.stratpoint.weatherapp.ui.views.textfield.PasswordOutlinedTextField
 
@@ -44,8 +49,20 @@ fun LoginScreen(
         onClickLogin = viewModel::login,
         onClickSignUp = {
             navController.navigate(AuthScreen.Register.route)
-        }
+        },
+        onDismissErrorDialog = viewModel::dismissErrorDialog
     )
+
+    val isLoginSuccessful = viewModel.isLoginSuccessful.collectAsState().value
+    val context = LocalContext.current
+
+    LaunchedEffect(key1 = isLoginSuccessful) {
+        if (isLoginSuccessful) {
+            context.showToast(context.getString(R.string.message_login_success))
+            // TODO proceed to home screen
+        }
+    }
+
 }
 
 @Composable
@@ -54,7 +71,8 @@ fun LoginScreenContent(
     validateEmail: (String) -> Unit,
     validatePassword: (String) -> Unit,
     onClickLogin: () -> Unit,
-    onClickSignUp: () -> Unit
+    onClickSignUp: () -> Unit,
+    onDismissErrorDialog: () -> Unit
 ) {
     ConstraintLayout(
         modifier = Modifier
@@ -125,6 +143,12 @@ fun LoginScreenContent(
         )
 
     }
+
+    LoadingDialog(screenState = screenState)
+    ErrorDialog(
+        screenState = screenState,
+        onDismissErrorDialog = onDismissErrorDialog
+    )
 
 }
 
@@ -214,6 +238,37 @@ fun CreateAnAccountText(
 }
 
 @Composable
+fun LoadingDialog(screenState: LoginScreenState) {
+    val showDialog = screenState.isLoading.value
+
+    if (showDialog) {
+        ProgressDialog(
+            showDialog = true,
+            message = stringResource(id = R.string.progress_login)
+        )
+    }
+}
+
+@Composable
+fun ErrorDialog(
+    screenState: LoginScreenState,
+    onDismissErrorDialog: () -> Unit
+) {
+    val errorMessage = screenState.errorMessage.value
+
+    errorMessage?.let {
+        BasicAlertDialog(
+            showDialog = true,
+            title = stringResource(id = R.string.app_name),
+            message = errorMessage,
+            buttonLabel = stringResource(id = R.string.label_ok)
+        ) {
+            onDismissErrorDialog()
+        }
+    }
+}
+
+@Composable
 private fun InitializeScreenState(
     screenState: LoginScreenState,
     viewModel: LoginViewModel
@@ -223,6 +278,8 @@ private fun InitializeScreenState(
     screenState.password.value = viewModel.password.collectAsState().value
     screenState.isValidPassword.value = viewModel.isValidPassword.collectAsState().value
     screenState.isLoginButtonEnabled.value = viewModel.isLoginButtonEnabled.collectAsState().value
+    screenState.isLoading.value = viewModel.isLoading.collectAsState().value
+    screenState.errorMessage.value = viewModel.errorMessage.collectAsState().value
 }
 
 @Preview(showBackground = true)
@@ -234,7 +291,8 @@ fun LoginScreenPreview() {
             validateEmail = {},
             validatePassword = {},
             onClickLogin = {},
-            onClickSignUp = {}
+            onClickSignUp = {},
+            onDismissErrorDialog = {}
         )
     }
 

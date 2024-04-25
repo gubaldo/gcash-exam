@@ -10,26 +10,28 @@ class AuthRepository @Inject constructor(
     private val firebaseAuth: FirebaseAuth
 ) : BaseRepository() {
 
-    suspend fun register(email: String, password: String) = serviceCall {
+    suspend fun register(name: String, email: String, password: String) = serviceCall {
         firebaseAuth.createUserWithEmailAndPassword(email, password).await()
 
         firebaseAuth.currentUser?.updateProfile(
             UserProfileChangeRequest.Builder().apply {
-                this.displayName = displayName
+                this.displayName = name
             }.build()
         )?.await()
 
-        firebaseAuth.currentUser?.let {
-            it.updateProfile(
-                UserProfileChangeRequest.Builder().apply {
-                    this.displayName = displayName
-                }.build()
-            ).await()
-        }
+
+        firebaseAuth.currentUser?.updateProfile(
+            UserProfileChangeRequest.Builder().apply {
+                this.displayName = name
+            }.build()
+        )?.await()
+        // TODO save to db
+
     }
 
     suspend fun login(email: String, password: String) = serviceCall {
         firebaseAuth.signInWithEmailAndPassword(email, password).await()
+        // TODO save to db
     }
 
 }

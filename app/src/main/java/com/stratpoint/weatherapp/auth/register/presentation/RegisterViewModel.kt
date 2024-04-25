@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stratpoint.weatherapp.auth.constant.AuthConstants
 import com.stratpoint.weatherapp.auth.data.AuthRepository
+import com.stratpoint.weatherapp.data.network.Status
 import com.stratpoint.weatherapp.extensions.isValidEmail
 import com.stratpoint.weatherapp.util.combineRegisterForm
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,6 +49,15 @@ class RegisterViewModel @Inject constructor(
         name.isNotEmpty() && isValidName && isValidEmail && email.isNotEmpty() && isValidPassword && password.isNotEmpty()
     }.stateIn(viewModelScope, SharingStarted.Eagerly, false)
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
+
+    private val _isRegisterSuccessful = MutableStateFlow(false)
+    val isRegisterSuccessful = _isRegisterSuccessful.asStateFlow()
+
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage = _errorMessage.asStateFlow()
+
     fun validateName(name: String) {
         _name.value = name
         _isValidName.value = name.isNotEmpty() || name.isNotBlank()
@@ -64,6 +75,28 @@ class RegisterViewModel @Inject constructor(
     }
 
     fun register() {
+        _isLoading.value = true
+
+        viewModelScope.launch {
+            val result = repository.register(_name.value, _email.value, _password.value)
+
+            when (result.status) {
+                Status.SUCCESS -> {
+                    _isRegisterSuccessful.value = true
+                }
+
+                Status.ERROR -> {
+                    _errorMessage.value = result.message
+                }
+            }
+
+            _isLoading.value = false
+
+        }
+    }
+
+    fun dismissErrorDialog() {
+        _errorMessage.value = null
     }
 
 }

@@ -10,6 +10,7 @@ fun RootNavGraph(rootNavController: NavHostController) {
     NavHost(
         route = Graph.Root.route,
         navController = rootNavController,
+        // TODO change to Home route
         startDestination = Graph.Auth.route,
     ) {
 
