@@ -4,6 +4,7 @@ plugins {
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -41,6 +42,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
@@ -61,6 +63,10 @@ dependencies {
     //Hilt
     implementation(libs.bundles.hilt)
     kapt(libs.hilt.compiler)
+
+    //Firebase
+    implementation(libs.bundles.firebase)
+    implementation(platform("com.google.firebase:firebase-bom:32.3.1"))
 
     // Testing
     testImplementation(testLibs.bundles.local)
