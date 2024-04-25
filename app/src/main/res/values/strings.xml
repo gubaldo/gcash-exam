@@ -1,3 +1,25 @@
 <resources>
     <string name="app_name">Weather App</string>
+
+    <!--    Login-->
+    <string name="label_email">Email</string>
+    <string name="error_invalid_email">Invalid Email</string>
+    <string name="label_password">Password</string>
+    <string name="error_password_length">Must be at least 8 characters long</string>
+    <string name="cd_show_password">Show Password</string>
+    <string name="cd_hide_password">Hide Password</string>
+    <string name="label_login">Login</string>
+    <string name="label_create_account">Create an Account</string>
+    <string name="progress_login">Logging in</string>
+    <string name="message_login_success">Login Success!</string>
+    <string name="label_ok">OK</string>
+
+    <!--    Register-->
+    <string name="cd_arrow_back">Arrow Back</string>
+    <string name="label_name">Name</string>
+    <string name="error_name">Please input a name</string>
+    <string name="label_register">Register</string>
+    <string name="progress_register">Creating account</string>
+    <string name="message_register_success">Registration Success!</string>
+
 </resources>
