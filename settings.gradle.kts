@@ -25,6 +25,7 @@ dependencyResolutionManagement {
             version("hiltVersion", "2.49")
             version("hiltNavigationVersion", "1.2.0")
             version("hiltCompilerVersion", "2.45")
+            version("constraintLayoutVersion", "1.0.1")
 
             // Android Core
             library(
@@ -64,6 +65,11 @@ dependencyResolutionManagement {
                 "androidx.compose.material3",
                 "material3"
             ).versionRef("composeMaterial3Version")
+            library(
+                "compose-constraint-layout",
+                "androidx.constraintlayout",
+                "constraintlayout-compose"
+            ).versionRef("constraintLayoutVersion")
 
             // Coroutines
             library(
@@ -101,7 +107,8 @@ dependencyResolutionManagement {
                     "compose-ui-graphics",
                     "compose-ui-tooling-preview",
                     "compose-material3",
-                    "coroutines"
+                    "coroutines",
+                    "compose-constraint-layout"
                 )
             )
             bundle(
