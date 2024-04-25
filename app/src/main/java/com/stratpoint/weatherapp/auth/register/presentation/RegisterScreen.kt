@@ -1,88 +1,95 @@
-package com.stratpoint.weatherapp.auth.login.presentation
+package com.stratpoint.weatherapp.auth.register.presentation
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.stratpoint.weatherapp.R
-import com.stratpoint.weatherapp.navigation.AuthScreen
 import com.stratpoint.weatherapp.ui.theme.WeatherAppTheme
 import com.stratpoint.weatherapp.ui.theme.spacing
 import com.stratpoint.weatherapp.ui.views.button.CommonButton
 import com.stratpoint.weatherapp.ui.views.textfield.CommonOutlinedTextField
 import com.stratpoint.weatherapp.ui.views.textfield.PasswordOutlinedTextField
+import com.stratpoint.weatherapp.ui.views.topbar.CommonBackTopBar
 
 @Composable
-fun LoginScreen(
+fun RegisterScreen(
     navController: NavHostController,
-    screenState: LoginScreenState = rememberLoginScreenState(),
-    viewModel: LoginViewModel = hiltViewModel()
+    screenState: RegisterScreenState = rememberRegisterScreenState(),
+    viewModel: RegisterViewModel = hiltViewModel()
 ) {
 
     InitializeScreenState(screenState, viewModel)
 
-    LoginScreenContent(
-        screenState = screenState,
-        validateEmail = viewModel::validateEmail,
-        validatePassword = viewModel::validatePassword,
-        onClickLogin = {
-
-        },
-        onClickSignUp = {
-            navController.navigate(AuthScreen.Register.route)
+    Scaffold(
+        topBar = {
+            CommonBackTopBar(
+                title = stringResource(id = R.string.label_create_account)
+            ) {
+                navController.navigateUp()
+            }
         }
-    )
+    ) {
+        RegisterScreenContent(
+            modifier = Modifier.padding(paddingValues = it),
+            screenState = screenState,
+            validateName = viewModel::validateName,
+            validateEmail = viewModel::validateEmail,
+            validatePassword = viewModel::validatePassword,
+            onClickRegister = {
+
+            }
+        )
+    }
+
 }
 
 @Composable
-fun LoginScreenContent(
-    screenState: LoginScreenState,
+fun RegisterScreenContent(
+    modifier: Modifier,
+    screenState: RegisterScreenState,
+    validateName: (String) -> Unit,
     validateEmail: (String) -> Unit,
     validatePassword: (String) -> Unit,
-    onClickLogin: () -> Unit,
-    onClickSignUp: () -> Unit
+    onClickRegister: () -> Unit,
 ) {
     ConstraintLayout(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(MaterialTheme.spacing.large)
     ) {
 
-        val (appNameTextRef, emailTextFieldRef, passwordTextFieldRef, loginButtonRef, createAnAccountTextRef) = createRefs()
+        val (nameTextFieldRef, emailTextFieldRef, passwordTextFieldRef, registerButtonRef) = createRefs()
 
-        AppNameText(
+        NameTextField(
             modifier = Modifier
-                .constrainAs(appNameTextRef) {
+                .constrainAs(nameTextFieldRef) {
                     top.linkTo(parent.top)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }
-                .padding(
-                    top = MaterialTheme.spacing.extraLarge,
-                    bottom = MaterialTheme.spacing.large
-                )
+                .padding(top = MaterialTheme.spacing.large)
+                .fillMaxWidth(),
+            screenState = screenState,
+            validateName = validateName
         )
 
         EmailTextField(
             modifier = Modifier
                 .constrainAs(emailTextFieldRef) {
-                    top.linkTo(appNameTextRef.bottom)
+                    top.linkTo(nameTextFieldRef.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
                 }
@@ -103,9 +110,9 @@ fun LoginScreenContent(
             validatePassword = validatePassword
         )
 
-        LoginButton(
+        RegisterButton(
             modifier = Modifier
-                .constrainAs(loginButtonRef) {
+                .constrainAs(registerButtonRef) {
                     top.linkTo(passwordTextFieldRef.bottom)
                     start.linkTo(parent.start)
                     end.linkTo(parent.end)
@@ -113,38 +120,40 @@ fun LoginScreenContent(
                 .fillMaxWidth()
                 .padding(vertical = MaterialTheme.spacing.medium),
             screenState = screenState,
-            onClickLogin = onClickLogin
+            onClickRegister = onClickRegister
         )
 
-        CreateAnAccountText(
-            modifier = Modifier
-                .constrainAs(createAnAccountTextRef) {
-                    top.linkTo(loginButtonRef.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                },
-            onClickSignUp = onClickSignUp
-        )
 
     }
-
 }
 
 @Composable
-fun AppNameText(modifier: Modifier = Modifier) {
-    Text(
+fun NameTextField(
+    modifier: Modifier,
+    screenState: RegisterScreenState,
+    validateName: (String) -> Unit
+) {
+    CommonOutlinedTextField(
         modifier = modifier,
-        text = stringResource(id = R.string.app_name),
-        style = MaterialTheme.typography.headlineMedium,
-        fontWeight = FontWeight.Bold,
-        textAlign = TextAlign.Center
+        value = screenState.name.value,
+        onValueChange = {
+            validateName(it)
+        },
+        label = stringResource(id = R.string.label_name),
+        errorMessage = if (!screenState.isValidName.value) {
+            stringResource(id = R.string.error_name)
+        } else null,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Next
+        )
     )
 }
 
 @Composable
 fun EmailTextField(
-    modifier: Modifier = Modifier,
-    screenState: LoginScreenState,
+    modifier: Modifier,
+    screenState: RegisterScreenState,
     validateEmail: (String) -> Unit
 ) {
     CommonOutlinedTextField(
@@ -167,7 +176,7 @@ fun EmailTextField(
 @Composable
 fun PasswordTextField(
     modifier: Modifier = Modifier,
-    screenState: LoginScreenState,
+    screenState: RegisterScreenState,
     validatePassword: (String) -> Unit
 ) {
     PasswordOutlinedTextField(
@@ -184,59 +193,46 @@ fun PasswordTextField(
 }
 
 @Composable
-fun LoginButton(
-    modifier: Modifier = Modifier,
-    screenState: LoginScreenState,
-    onClickLogin: () -> Unit
+fun RegisterButton(
+    modifier: Modifier,
+    screenState: RegisterScreenState,
+    onClickRegister: () -> Unit
 ) {
     CommonButton(
         modifier = modifier,
-        label = stringResource(id = R.string.label_login),
-        enabled = screenState.isLoginButtonEnabled.value
+        label = stringResource(id = R.string.label_register),
+        enabled = screenState.isRegisterButtonEnabled.value
     ) {
-        onClickLogin()
+        onClickRegister()
     }
 }
 
 @Composable
-fun CreateAnAccountText(
-    modifier: Modifier = Modifier,
-    onClickSignUp: () -> Unit
-) {
-    Text(
-        modifier = modifier
-            .clickable {
-                onClickSignUp()
-            },
-        text = stringResource(id = R.string.label_create_account),
-        fontWeight = FontWeight.Bold,
-        textAlign = TextAlign.Center,
-        textDecoration = TextDecoration.Underline
-    )
-}
-
-@Composable
 private fun InitializeScreenState(
-    screenState: LoginScreenState,
-    viewModel: LoginViewModel
+    screenState: RegisterScreenState,
+    viewModel: RegisterViewModel
 ) {
+    screenState.name.value = viewModel.name.collectAsState().value
+    screenState.isValidName.value = viewModel.isValidName.collectAsState().value
     screenState.email.value = viewModel.email.collectAsState().value
     screenState.isValidEmail.value = viewModel.isValidEmail.collectAsState().value
     screenState.password.value = viewModel.password.collectAsState().value
     screenState.isValidPassword.value = viewModel.isValidPassword.collectAsState().value
-    screenState.isLoginButtonEnabled.value = viewModel.isLoginButtonEnabled.collectAsState().value
+    screenState.isRegisterButtonEnabled.value =
+        viewModel.isRegisterButtonEnabled.collectAsState().value
 }
 
 @Preview(showBackground = true)
 @Composable
-fun LoginScreenPreview() {
+fun RegisterScreenPreview() {
     WeatherAppTheme {
-        LoginScreenContent(
-            screenState = rememberLoginScreenState(),
+        RegisterScreenContent(
+            modifier = Modifier,
+            screenState = rememberRegisterScreenState(),
+            validateName = {},
             validateEmail = {},
             validatePassword = {},
-            onClickLogin = {},
-            onClickSignUp = {}
+            onClickRegister = {}
         )
     }
 
