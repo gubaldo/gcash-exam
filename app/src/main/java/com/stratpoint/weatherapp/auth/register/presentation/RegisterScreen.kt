@@ -48,9 +48,7 @@ fun RegisterScreen(
             validateName = viewModel::validateName,
             validateEmail = viewModel::validateEmail,
             validatePassword = viewModel::validatePassword,
-            onClickRegister = {
-
-            }
+            onClickRegister = viewModel::register
         )
     }
 

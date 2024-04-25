@@ -26,6 +26,10 @@ dependencyResolutionManagement {
             version("hiltNavigationVersion", "1.2.0")
             version("hiltCompilerVersion", "2.45")
             version("constraintLayoutVersion", "1.0.1")
+            version("firebaseAnalyticsVersion", "21.6.2")
+            version("firebaseAuthVersion", "22.3.1")
+            version("retrofitVersion", "2.11.0")
+            version("loggingInterceptorVersion", "4.12.0")
 
             // Android Core
             library(
@@ -97,6 +101,18 @@ dependencyResolutionManagement {
                 "hilt-android-compiler"
             ).versionRef("hiltCompilerVersion")
 
+            // Firebase
+            library(
+                "firebase-analytics",
+                "com.google.firebase",
+                "firebase-analytics-ktx"
+            ).versionRef("firebaseAnalyticsVersion")
+            library(
+                "firebase-auth",
+                "com.google.firebase",
+                "firebase-auth-ktx"
+            ).versionRef("firebaseAuthVersion")
+
             // Bundles
             bundle(
                 "android-core", listOf(
@@ -115,6 +131,12 @@ dependencyResolutionManagement {
                 "hilt", listOf(
                     "hilt-android",
                     "hilt-navigation"
+                )
+            )
+            bundle(
+                "firebase", listOf(
+                    "firebase-analytics",
+                    "firebase-auth"
                 )
             )
         }

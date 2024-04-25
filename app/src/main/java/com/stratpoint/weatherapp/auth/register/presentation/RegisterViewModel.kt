@@ -3,6 +3,7 @@ package com.stratpoint.weatherapp.auth.register.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stratpoint.weatherapp.auth.constant.AuthConstants
+import com.stratpoint.weatherapp.auth.data.AuthRepository
 import com.stratpoint.weatherapp.extensions.isValidEmail
 import com.stratpoint.weatherapp.util.combineRegisterForm
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -13,7 +14,9 @@ import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
-class RegisterViewModel @Inject constructor() : ViewModel() {
+class RegisterViewModel @Inject constructor(
+    private val repository: AuthRepository
+) : ViewModel() {
 
     private val _name = MutableStateFlow("")
     val name = _name.asStateFlow()
@@ -58,6 +61,9 @@ class RegisterViewModel @Inject constructor() : ViewModel() {
         _password.value = password
         _isValidPassword.value =
             password.isEmpty() || password.length >= AuthConstants.PASSWORD_MIN_CHARACTERS
+    }
+
+    fun register() {
     }
 
 }

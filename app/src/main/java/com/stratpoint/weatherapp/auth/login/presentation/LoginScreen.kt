@@ -41,9 +41,7 @@ fun LoginScreen(
         screenState = screenState,
         validateEmail = viewModel::validateEmail,
         validatePassword = viewModel::validatePassword,
-        onClickLogin = {
-
-        },
+        onClickLogin = viewModel::login,
         onClickSignUp = {
             navController.navigate(AuthScreen.Register.route)
         }

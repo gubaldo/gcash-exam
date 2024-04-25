@@ -3,6 +3,7 @@ package com.stratpoint.weatherapp.auth.login.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stratpoint.weatherapp.auth.constant.AuthConstants.PASSWORD_MIN_CHARACTERS
+import com.stratpoint.weatherapp.auth.data.AuthRepository
 import com.stratpoint.weatherapp.extensions.isValidEmail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,7 +14,9 @@ import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor() : ViewModel() {
+class LoginViewModel @Inject constructor(
+    private val repository: AuthRepository
+) : ViewModel() {
 
     private val _email = MutableStateFlow("")
     val email = _email.asStateFlow()
@@ -44,6 +47,10 @@ class LoginViewModel @Inject constructor() : ViewModel() {
     fun validatePassword(password: String) {
         _password.value = password
         _isValidPassword.value = password.isEmpty() || password.length >= PASSWORD_MIN_CHARACTERS
+    }
+
+    fun login() {
+
     }
 
 }
