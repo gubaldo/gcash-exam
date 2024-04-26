@@ -46,4 +46,7 @@ class HomeRepository @Inject constructor(
         }
     }
 
+    suspend fun getWeatherHistoryFlow() = appDatabase.weatherDao()
+        .getWeatherByUserIdListFlow(appDatabase.userDao().getCurrentLoggedInUserId())
+
 }

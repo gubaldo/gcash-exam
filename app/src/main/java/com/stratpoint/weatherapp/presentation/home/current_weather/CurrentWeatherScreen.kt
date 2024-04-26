@@ -21,11 +21,15 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberMultiplePermissionsState
+import com.stratpoint.weatherapp.BuildConfig
 import com.stratpoint.weatherapp.R
+import com.stratpoint.weatherapp.presentation.home.constant.IconUtil.getIcon
 import com.stratpoint.weatherapp.ui.theme.WeatherAppTheme
 import com.stratpoint.weatherapp.ui.theme.spacing
 import com.stratpoint.weatherapp.ui.views.dialog.ProgressDialog
 import com.stratpoint.weatherapp.ui.views.icon.WeatherIcon
+import com.stratpoint.weatherapp.util.DateUtil.TIME_FORMAT
+import com.stratpoint.weatherapp.util.DateUtil.unixTimeToDateString
 import com.stratpoint.weatherapp.util.observeAsState
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -76,7 +80,7 @@ fun CurrentWeatherScreen(
             viewModel.getWeather(
                 currentLocation.latitude,
                 currentLocation.longitude,
-                "cf4992b73b315a2d160e74538dec2495",
+                BuildConfig.API_KEY,
                 user.id
             )
         }
@@ -91,7 +95,6 @@ fun CurrentWeatherScreen(
 
 }
 
-@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CurrentWeatherContent(
     modifier: Modifier,
@@ -115,7 +118,8 @@ fun CurrentWeatherContent(
                         end.linkTo(parent.end)
                     }
                     .padding(top = MaterialTheme.spacing.large)
-                    .size(100.dp)
+                    .size(100.dp),
+                screenState = screenState
             )
 
             DegreeCelsiusText(
@@ -182,9 +186,13 @@ fun CurrentWeatherContent(
 
 @Composable
 fun WeatherIconView(
-    modifier: Modifier
+    modifier: Modifier,
+    screenState: CurrentWeatherScreenState
 ) {
-    WeatherIcon(modifier = modifier, imageId = R.drawable.ic_sun)
+
+    val icon = getIcon(screenState.weather.value.weatherId, screenState.weather.value.date)
+
+    WeatherIcon(modifier = modifier, imageId = icon)
 }
 
 @Composable
@@ -223,9 +231,11 @@ fun SunriseText(
     screenState: CurrentWeatherScreenState
 ) {
 
+    val formattedSunrise = unixTimeToDateString(screenState.weather.value.sunrise, TIME_FORMAT)
+
     Text(
         modifier = modifier,
-        text = stringResource(id = R.string.label_sunrise, screenState.weather.value.sunrise),
+        text = stringResource(id = R.string.label_sunrise, formattedSunrise),
         style = MaterialTheme.typography.headlineSmall,
         textAlign = TextAlign.Start
     )
@@ -236,9 +246,12 @@ fun SunsetText(
     modifier: Modifier = Modifier,
     screenState: CurrentWeatherScreenState
 ) {
+
+    val formattedSunset = unixTimeToDateString(screenState.weather.value.sunset, TIME_FORMAT)
+
     Text(
         modifier = modifier,
-        text = stringResource(id = R.string.label_sunset, screenState.weather.value.sunset),
+        text = stringResource(id = R.string.label_sunset, formattedSunset),
         style = MaterialTheme.typography.headlineSmall,
         textAlign = TextAlign.Start
     )

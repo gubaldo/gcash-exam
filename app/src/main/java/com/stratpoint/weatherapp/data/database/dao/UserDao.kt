@@ -16,4 +16,7 @@ abstract class UserDao : BaseDao<User> {
     @Query("DELETE FROM user")
     abstract suspend fun deleteUser()
 
+    @Query("SELECT id FROM user LIMIT 1")
+    abstract suspend fun getCurrentLoggedInUserId(): String
+
 }

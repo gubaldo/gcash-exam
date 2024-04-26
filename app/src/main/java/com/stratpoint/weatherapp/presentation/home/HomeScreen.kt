@@ -1,8 +1,6 @@
 package com.stratpoint.weatherapp.presentation.home
 
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -24,8 +22,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.DpOffset
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
@@ -109,40 +105,26 @@ fun HomeContent(
 @Composable
 fun HomeTopBar(screenState: HomeScreenState) {
     TopAppBar(
-        title = {},
+        title = {
+            Text(text = stringResource(id = R.string.app_name))
+        },
         actions = {
             IconButton(onClick = {
-                screenState.showDropdownMenu.value = !screenState.showDropdownMenu.value
+                screenState.showConfirmLogout.value = !screenState.showConfirmLogout.value
             }) {
                 Icon(
-                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_account),
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_logout),
                     contentDescription = null
                 )
             }
 
-            DropdownMenu(
-                expanded = screenState.showDropdownMenu.value,
-                onDismissRequest = {
-                    screenState.showDropdownMenu.value = false
-                },
-                offset = DpOffset(x = 10.dp, y = 5.dp)
-            ) {
-                DropdownMenuItem(
-                    text = {
-                        Text(stringResource(R.string.label_logout))
-                    },
-                    onClick = {
-                        screenState.showConfirmLogout.value = true
-                    })
-            }
-
         },
         colors = TopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+            containerColor = MaterialTheme.colorScheme.primary,
             scrolledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
             navigationIconContentColor = MaterialTheme.colorScheme.surfaceVariant,
             titleContentColor = MaterialTheme.colorScheme.surfaceVariant,
-            actionIconContentColor = MaterialTheme.colorScheme.primary
+            actionIconContentColor = MaterialTheme.colorScheme.surfaceVariant
         )
     )
 }
@@ -150,7 +132,7 @@ fun HomeTopBar(screenState: HomeScreenState) {
 @Composable
 fun BottomNavBar(homeNavController: NavHostController) {
     NavigationBar(
-        containerColor = MaterialTheme.colorScheme.surfaceVariant
+        containerColor = MaterialTheme.colorScheme.secondary
     ) {
 
         val screens = listOf(
@@ -175,9 +157,9 @@ fun BottomNavBar(homeNavController: NavHostController) {
                 },
                 label = { Text(text = stringResource(id = screen.tabName)) },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = MaterialTheme.colorScheme.surfaceTint,
-                    selectedTextColor = MaterialTheme.colorScheme.surfaceTint,
-                    indicatorColor = MaterialTheme.colorScheme.surfaceVariant
+                    selectedIconColor = MaterialTheme.colorScheme.primary,
+                    selectedTextColor = MaterialTheme.colorScheme.primary,
+                    indicatorColor = MaterialTheme.colorScheme.secondary
                 ),
                 selected = isTabSelected,
                 onClick = {

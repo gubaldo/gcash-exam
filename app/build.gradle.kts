@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -6,6 +9,12 @@ plugins {
     id("com.google.gms.google-services")
     id("com.google.devtools.ksp")
 }
+
+val keyPropertiesFile = rootProject.file("key.properties")
+val keyProperties = Properties()
+keyProperties.load(FileInputStream(keyPropertiesFile))
+
+val apiKey: String = keyProperties.getProperty("apiKey")
 
 android {
     namespace = "com.stratpoint.weatherapp"
@@ -22,6 +31,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        buildConfigField("String", "API_KEY", "\"$apiKey\"")
     }
 
     buildTypes {
