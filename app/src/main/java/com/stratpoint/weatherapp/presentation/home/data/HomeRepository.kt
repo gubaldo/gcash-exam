@@ -3,6 +3,7 @@ package com.stratpoint.weatherapp.presentation.home.data
 import com.google.firebase.auth.FirebaseAuth
 import com.stratpoint.weatherapp.data.database.AppDatabase
 import com.stratpoint.weatherapp.data.network.BaseRepository
+import com.stratpoint.weatherapp.domain.Weather
 import com.stratpoint.weatherapp.presentation.home.data.service.WeatherApiService
 import javax.inject.Inject
 
@@ -14,8 +15,28 @@ class HomeRepository @Inject constructor(
 
     fun isUserLoggedIn() = firebaseAuth.currentUser != null
 
-    suspend fun getWeather(lat: Double, lon: Double, apiKey: String) = serviceCall {
-        weatherApiService.getWeather(lat, lon, apiKey)
+    fun getUserFlow() = appDatabase.userDao().getLoggedInUser()
+
+    suspend fun getWeather(lat: Double, lon: Double, apiKey: String, userId: String) = serviceCall {
+        val weatherResponse = weatherApiService.getWeather(lat, lon, apiKey)
+        val weatherStatus = weatherResponse.weatherStatus[0]
+        val weather = appDatabase.weatherDao().insert(
+            Weather(
+                userId = userId,
+                weatherId = weatherStatus.id,
+                weatherStatus = weatherStatus.main,
+                temperature = weatherResponse.weatherTemperature.temp.toString(),
+                date = weatherResponse.date,
+                timezone = weatherResponse.timezone,
+                city = weatherResponse.name,
+                country = weatherResponse.weatherSystem.country,
+                sunrise = weatherResponse.weatherSystem.sunrise,
+                sunset = weatherResponse.weatherSystem.sunset
+            )
+        )
+
+        appDatabase.weatherDao().getWeatherById(weather)
+
     }
 
     suspend fun logout() = serviceCall {

@@ -24,6 +24,7 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.stratpoint.weatherapp.R
 import com.stratpoint.weatherapp.ui.theme.WeatherAppTheme
 import com.stratpoint.weatherapp.ui.theme.spacing
+import com.stratpoint.weatherapp.ui.views.dialog.ProgressDialog
 import com.stratpoint.weatherapp.ui.views.icon.WeatherIcon
 import com.stratpoint.weatherapp.util.observeAsState
 
@@ -58,95 +59,121 @@ fun CurrentWeatherScreen(
         }
     }
 
-    LaunchedEffect(locationPermissions.allPermissionsGranted) {
-        viewModel.getLocation()
+    LaunchedEffect(locationPermissions.allPermissionsGranted, screenState.user) {
+
+        if (locationPermissions.allPermissionsGranted) {
+            screenState.hasPermissions.value = true
+            viewModel.getLocation()
+        }
+
     }
 
-    LaunchedEffect(screenState.currentLocation.value) {
-        screenState.currentLocation.value?.let {
-            viewModel.getWeather(it.latitude, it.longitude, "cf4992b73b315a2d160e74538dec2495")
+    LaunchedEffect(screenState.currentLocation.value, screenState.user.value) {
+        val currentLocation = screenState.currentLocation.value
+        val user = screenState.user.value
+
+        if (currentLocation != null && user != null) {
+            viewModel.getWeather(
+                currentLocation.latitude,
+                currentLocation.longitude,
+                "cf4992b73b315a2d160e74538dec2495",
+                user.id
+            )
         }
     }
 
     InitializeScreenState(screenState, viewModel)
 
     CurrentWeatherContent(
-        modifier
+        modifier,
+        screenState,
     )
 
 }
 
+@OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun CurrentWeatherContent(
-    modifier: Modifier
+    modifier: Modifier,
+    screenState: CurrentWeatherScreenState
 ) {
-    ConstraintLayout(
-        modifier = modifier
-            .fillMaxSize()
-            .padding(MaterialTheme.spacing.large)
-    ) {
-        val (iconWeatherRef, degreeCelsiusTextRef, locationTextRef, sunriseTextRef, sunsetTextRef) = createRefs()
 
-        WeatherIconView(
-            modifier = Modifier
-                .constrainAs(iconWeatherRef) {
-                    top.linkTo(parent.top)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-                .padding(top = MaterialTheme.spacing.large)
-                .size(100.dp)
-        )
+    if (screenState.hasPermissions.value && !screenState.isLoading.value && screenState.weather.value != null) {
 
-        DegreeCelsiusText(
-            modifier = Modifier
-                .constrainAs(degreeCelsiusTextRef) {
-                    top.linkTo(iconWeatherRef.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-                .padding(vertical = MaterialTheme.spacing.small)
-        )
+        ConstraintLayout(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(MaterialTheme.spacing.large)
+        ) {
+            val (iconWeatherRef, degreeCelsiusTextRef, locationTextRef, sunriseTextRef, sunsetTextRef) = createRefs()
 
-        LocationText(
-            modifier = Modifier
-                .constrainAs(locationTextRef) {
-                    top.linkTo(degreeCelsiusTextRef.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                }
-        )
+            WeatherIconView(
+                modifier = Modifier
+                    .constrainAs(iconWeatherRef) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                    .padding(top = MaterialTheme.spacing.large)
+                    .size(100.dp)
+            )
 
-        SunriseText(
-            modifier = Modifier
-                .constrainAs(sunriseTextRef) {
-                    top.linkTo(locationTextRef.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    width = Dimension.fillToConstraints
-                }
-                .padding(
-                    top = MaterialTheme.spacing.large,
-                    start = MaterialTheme.spacing.medium,
-                    end = MaterialTheme.spacing.medium
-                )
-        )
+            DegreeCelsiusText(
+                modifier = Modifier
+                    .constrainAs(degreeCelsiusTextRef) {
+                        top.linkTo(iconWeatherRef.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+                    .padding(vertical = MaterialTheme.spacing.small)
+            )
 
-        SunsetText(
-            modifier = Modifier
-                .constrainAs(sunsetTextRef) {
-                    top.linkTo(sunriseTextRef.bottom)
-                    start.linkTo(parent.start)
-                    end.linkTo(parent.end)
-                    width = Dimension.fillToConstraints
-                }
-                .padding(
-                    start = MaterialTheme.spacing.medium,
-                    end = MaterialTheme.spacing.medium
-                )
-        )
+            LocationText(
+                modifier = Modifier
+                    .constrainAs(locationTextRef) {
+                        top.linkTo(degreeCelsiusTextRef.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    }
+            )
+
+            SunriseText(
+                modifier = Modifier
+                    .constrainAs(sunriseTextRef) {
+                        top.linkTo(locationTextRef.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        width = Dimension.fillToConstraints
+                    }
+                    .padding(
+                        top = MaterialTheme.spacing.large,
+                        start = MaterialTheme.spacing.medium,
+                        end = MaterialTheme.spacing.medium
+                    )
+            )
+
+            SunsetText(
+                modifier = Modifier
+                    .constrainAs(sunsetTextRef) {
+                        top.linkTo(sunriseTextRef.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                        width = Dimension.fillToConstraints
+                    }
+                    .padding(
+                        start = MaterialTheme.spacing.medium,
+                        end = MaterialTheme.spacing.medium
+                    )
+            )
+
+        }
 
     }
+
+    if (screenState.isLoading.value) {
+        LoadingDialog(screenState)
+    }
+
 }
 
 @Composable
@@ -198,11 +225,26 @@ fun SunsetText(modifier: Modifier = Modifier) {
 }
 
 @Composable
+fun LoadingDialog(screenState: CurrentWeatherScreenState) {
+    val showDialog = screenState.isLoading.value
+
+    if (showDialog) {
+        ProgressDialog(
+            showDialog = true,
+            message = stringResource(id = R.string.progress_loading)
+        )
+    }
+}
+
+@Composable
 private fun InitializeScreenState(
     screenState: CurrentWeatherScreenState,
     viewModel: CurrentWeatherViewModel
 ) {
     screenState.currentLocation.value = viewModel.currentLocation.collectAsState().value
+    screenState.user.value = viewModel.user.collectAsState().value
+    screenState.isLoading.value = viewModel.isLoading.collectAsState().value
+    screenState.weather.value = viewModel.weather.collectAsState().value
 }
 
 @Preview(showBackground = true)
@@ -210,7 +252,8 @@ private fun InitializeScreenState(
 private fun CurrentWeatherPreview() {
     WeatherAppTheme {
         CurrentWeatherContent(
-            Modifier
+            Modifier,
+            screenState = rememberCurrentWeatherScreenState()
         )
     }
 }
