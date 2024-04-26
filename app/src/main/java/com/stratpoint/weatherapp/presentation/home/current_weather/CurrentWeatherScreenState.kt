@@ -13,7 +13,7 @@ class CurrentWeatherScreenState(
     val currentLocation: MutableState<Location?>,
     val user: MutableState<User?>,
     val isLoading: MutableState<Boolean>,
-    val weather: MutableState<Weather?>,
+    val weather: MutableState<Weather>,
 )
 
 @Composable
@@ -22,7 +22,7 @@ fun rememberCurrentWeatherScreenState(
     currentLocation: MutableState<Location?> = mutableStateOf(null),
     user: MutableState<User?> = mutableStateOf(null),
     isLoading: MutableState<Boolean> = mutableStateOf(false),
-    weather: MutableState<Weather?> = mutableStateOf(null)
+    weather: MutableState<Weather> = mutableStateOf(Weather())
 ) = remember {
     CurrentWeatherScreenState(
         hasPermissions = hasPermissions,

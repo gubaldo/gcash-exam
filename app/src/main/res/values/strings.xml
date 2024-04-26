@@ -31,7 +31,7 @@
     <string name="label_weather_today">Weather Today</string>
     <string name="label_weather_history">History</string>
     <string name="label_degree_celsius">%s \u2103</string>
-    <string name="label_sunrise">Sunrise: </string>
-    <string name="label_sunset">Sunset: </string>
+    <string name="label_sunrise">Sunrise: %s</string>
+    <string name="label_sunset">Sunset: %s</string>
 
 </resources>

@@ -13,6 +13,6 @@ abstract class WeatherDao : BaseDao<Weather> {
     abstract fun getWeatherByUserIdListFlow(userId: String): Flow<List<Weather>>
 
     @Query("SELECT * FROM weather WHERE id = :id")
-    abstract fun getWeatherById(id: Long): Weather
+    abstract suspend fun getWeatherById(id: Long): Weather
 
 }

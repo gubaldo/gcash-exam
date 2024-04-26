@@ -98,7 +98,7 @@ fun CurrentWeatherContent(
     screenState: CurrentWeatherScreenState
 ) {
 
-    if (screenState.hasPermissions.value && !screenState.isLoading.value && screenState.weather.value != null) {
+    if (screenState.hasPermissions.value && !screenState.isLoading.value && screenState.weather.value.id.toInt() != 0) {
 
         ConstraintLayout(
             modifier = modifier
@@ -125,7 +125,8 @@ fun CurrentWeatherContent(
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
                     }
-                    .padding(vertical = MaterialTheme.spacing.small)
+                    .padding(vertical = MaterialTheme.spacing.small),
+                screenState = screenState
             )
 
             LocationText(
@@ -134,7 +135,8 @@ fun CurrentWeatherContent(
                         top.linkTo(degreeCelsiusTextRef.bottom)
                         start.linkTo(parent.start)
                         end.linkTo(parent.end)
-                    }
+                    },
+                screenState = screenState
             )
 
             SunriseText(
@@ -149,7 +151,8 @@ fun CurrentWeatherContent(
                         top = MaterialTheme.spacing.large,
                         start = MaterialTheme.spacing.medium,
                         end = MaterialTheme.spacing.medium
-                    )
+                    ),
+                screenState = screenState
             )
 
             SunsetText(
@@ -163,7 +166,8 @@ fun CurrentWeatherContent(
                     .padding(
                         start = MaterialTheme.spacing.medium,
                         end = MaterialTheme.spacing.medium
-                    )
+                    ),
+                screenState = screenState
             )
 
         }
@@ -184,10 +188,16 @@ fun WeatherIconView(
 }
 
 @Composable
-fun DegreeCelsiusText(modifier: Modifier = Modifier) {
+fun DegreeCelsiusText(
+    modifier: Modifier = Modifier,
+    screenState: CurrentWeatherScreenState
+) {
     Text(
         modifier = modifier,
-        text = stringResource(id = R.string.label_degree_celsius, "32"),
+        text = stringResource(
+            id = R.string.label_degree_celsius,
+            screenState.weather.value.temperature
+        ),
         style = MaterialTheme.typography.headlineLarge,
         fontWeight = FontWeight.Bold,
         textAlign = TextAlign.Center
@@ -195,30 +205,40 @@ fun DegreeCelsiusText(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun LocationText(modifier: Modifier = Modifier) {
+fun LocationText(
+    modifier: Modifier = Modifier,
+    screenState: CurrentWeatherScreenState
+) {
     Text(
         modifier = modifier,
-        text = "Test Location",
+        text = "${screenState.weather.value.city}, ${screenState.weather.value.country}",
         style = MaterialTheme.typography.headlineSmall,
         textAlign = TextAlign.Center
     )
 }
 
 @Composable
-fun SunriseText(modifier: Modifier = Modifier) {
+fun SunriseText(
+    modifier: Modifier = Modifier,
+    screenState: CurrentWeatherScreenState
+) {
+
     Text(
         modifier = modifier,
-        text = stringResource(id = R.string.label_sunrise),
+        text = stringResource(id = R.string.label_sunrise, screenState.weather.value.sunrise),
         style = MaterialTheme.typography.headlineSmall,
         textAlign = TextAlign.Start
     )
 }
 
 @Composable
-fun SunsetText(modifier: Modifier = Modifier) {
+fun SunsetText(
+    modifier: Modifier = Modifier,
+    screenState: CurrentWeatherScreenState
+) {
     Text(
         modifier = modifier,
-        text = stringResource(id = R.string.label_sunset),
+        text = stringResource(id = R.string.label_sunset, screenState.weather.value.sunset),
         style = MaterialTheme.typography.headlineSmall,
         textAlign = TextAlign.Start
     )
