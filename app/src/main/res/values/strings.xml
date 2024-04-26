@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Weather App</string>
+    <string name="app_name">GWeather App</string>
 
     <!--    Login-->
     <string name="label_email">Email</string>
@@ -21,5 +21,18 @@
     <string name="label_register">Register</string>
     <string name="progress_register">Creating account</string>
     <string name="message_register_success">Registration Success!</string>
+
+    <!--    Home-->
+    <string name="label_logout">Logout</string>
+    <string name="progress_loading">Loading</string>
+    <string name="confirm_logout">Are you sure you want to logout?</string>
+    <string name="label_cancel">Cancel</string>
+    <string name="progress_logout">Logging out</string>
+    <string name="label_weather_today">Weather Today</string>
+    <string name="label_weather_history">History</string>
+    <string name="label_degree_celsius">%s \u2103</string>
+    <string name="label_sunrise">Sunrise: %s</string>
+    <string name="label_sunset">Sunset: %s</string>
+    <string name="label_sunrise_sunset">Sunrise: %s | Sunset: %s</string>
 
 </resources>
