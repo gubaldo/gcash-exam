@@ -3,17 +3,14 @@ package com.stratpoint.weatherapp.presentation.home.current_weather
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,6 +24,7 @@ import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.stratpoint.weatherapp.R
 import com.stratpoint.weatherapp.ui.theme.WeatherAppTheme
 import com.stratpoint.weatherapp.ui.theme.spacing
+import com.stratpoint.weatherapp.ui.views.icon.WeatherIcon
 import com.stratpoint.weatherapp.util.observeAsState
 
 @OptIn(ExperimentalPermissionsApi::class)
@@ -89,7 +87,7 @@ fun CurrentWeatherContent(
     ) {
         val (iconWeatherRef, degreeCelsiusTextRef, locationTextRef, sunriseTextRef, sunsetTextRef) = createRefs()
 
-        WeatherIcon(
+        WeatherIconView(
             modifier = Modifier
                 .constrainAs(iconWeatherRef) {
                     top.linkTo(parent.top)
@@ -152,14 +150,10 @@ fun CurrentWeatherContent(
 }
 
 @Composable
-fun WeatherIcon(
+fun WeatherIconView(
     modifier: Modifier
 ) {
-    Icon(
-        imageVector = ImageVector.vectorResource(id = R.drawable.ic_sun),
-        contentDescription = null,
-        modifier = modifier
-    )
+    WeatherIcon(modifier = modifier, imageId = R.drawable.ic_sun)
 }
 
 @Composable
