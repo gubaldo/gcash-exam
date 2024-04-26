@@ -1,4 +1,4 @@
-package com.stratpoint.weatherapp.presentation.home.history
+package com.stratpoint.weatherapp.presentation.home
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState

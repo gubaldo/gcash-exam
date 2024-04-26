@@ -35,8 +35,6 @@ import com.stratpoint.weatherapp.R
 import com.stratpoint.weatherapp.navigation.HomeNavGraph
 import com.stratpoint.weatherapp.navigation.HomeScreen
 import com.stratpoint.weatherapp.navigation.navigateSingleTopTo
-import com.stratpoint.weatherapp.presentation.home.history.HomeScreenState
-import com.stratpoint.weatherapp.presentation.home.history.rememberHomeScreenState
 import com.stratpoint.weatherapp.ui.theme.WeatherAppTheme
 import com.stratpoint.weatherapp.ui.views.dialog.ConfirmationAlertDialog
 
