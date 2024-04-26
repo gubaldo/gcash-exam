@@ -62,6 +62,12 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    testOptions {
+        animationsDisabled = true
+        unitTests {
+            isReturnDefaultValues = true
+        }
+    }
 }
 
 dependencies {
@@ -72,7 +78,6 @@ dependencies {
 
     // Hilt
     implementation(libs.bundles.hilt)
-    implementation("com.google.android.gms:play-services-location:21.2.0")
     kapt(libs.hilt.compiler)
 
     // Firebase
