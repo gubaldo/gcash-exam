@@ -1,7 +1,6 @@
 package com.stratpoint.weatherapp.extensions
 
-import android.util.Patterns
-
 fun String.isValidEmail(): Boolean {
-    return Patterns.EMAIL_ADDRESS.matcher(this).matches()
+    val emailRegex = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+".toRegex()
+    return this.matches(emailRegex)
 }

@@ -32,6 +32,7 @@ dependencyResolutionManagement {
             version("loggingInterceptorVersion", "4.12.0")
             version("roomVersion", "2.5.2")
             version("accompanistVersion", "0.25.0")
+            version("servicesLocationVersion", "21.2.0")
 
             // Android Core
             library(
@@ -76,6 +77,11 @@ dependencyResolutionManagement {
                 "androidx.constraintlayout",
                 "constraintlayout-compose"
             ).versionRef("constraintLayoutVersion")
+            library(
+                "services-location",
+                "com.google.android.gms",
+                "play-services-location"
+            ).versionRef("servicesLocationVersion")
 
             // Coroutines
             library(
@@ -167,7 +173,8 @@ dependencyResolutionManagement {
                     "compose-ui-tooling-preview",
                     "compose-material3",
                     "coroutines",
-                    "compose-constraint-layout"
+                    "compose-constraint-layout",
+                    "services-location"
                 )
             )
             bundle(
@@ -203,9 +210,39 @@ dependencyResolutionManagement {
             version("uiAndroidJunitVersion", "1.1.5")
             version("espressoCoreVersion", "3.5.1")
             version("uiTestVersion", "1.6.6")
+            version("mockitoVersion", "3.2.0")
+            version("mockitoInlineVersion", "5.1.0")
+            version("archCoreVersion", "2.2.0")
+            version("kotlinxCoroutinesVersion", "1.8.0")
+            version("turbineVersion", "0.12.1")
 
             // Local Test
             library("junit", "junit", "junit").versionRef("junitVersion")
+            library(
+                "mockito-kotlin",
+                "org.mockito.kotlin",
+                "mockito-kotlin"
+            ).versionRef("mockitoVersion")
+            library(
+                "mockito-inline",
+                "org.mockito",
+                "mockito-inline"
+            ).versionRef("mockitoInlineVersion")
+            library(
+                "arch-core",
+                "androidx.arch.core",
+                "core-testing"
+            ).versionRef("archCoreVersion")
+            library(
+                "kotlinx-coroutines",
+                "org.jetbrains.kotlinx",
+                "kotlinx-coroutines-test"
+            ).versionRef("kotlinxCoroutinesVersion")
+            library(
+                "turbine",
+                "app.cash.turbine",
+                "turbine"
+            ).versionRef("turbineVersion")
 
             // UI Androidx JUnit
             library(
@@ -243,7 +280,12 @@ dependencyResolutionManagement {
             // Bundles
             bundle(
                 "local", listOf(
-                    "junit"
+                    "junit",
+                    "mockito-kotlin",
+                    "mockito-inline",
+                    "arch-core",
+                    "turbine",
+                    "kotlinx-coroutines"
                 )
             )
             bundle(
