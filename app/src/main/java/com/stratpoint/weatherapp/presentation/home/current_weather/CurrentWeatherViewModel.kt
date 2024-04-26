@@ -1,6 +1,7 @@
 package com.stratpoint.weatherapp.presentation.home.current_weather
 
 import android.location.Location
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stratpoint.weatherapp.presentation.home.data.HomeRepository
@@ -34,7 +35,11 @@ class CurrentWeatherViewModel @Inject constructor(
         long: Double,
         apiKey: String
     ) {
-        // TODO
+        viewModelScope.launch {
+            val test = repository.getWeather(lat, long, apiKey)
+            Log.e("TEST", test.toString())
+        }
+
     }
 
 }

@@ -23,7 +23,14 @@
     <string name="message_register_success">Registration Success!</string>
 
     <!--    Home-->
+    <string name="label_logout">Logout</string>
+    <string name="confirm_logout">Are you sure you want to logout?</string>
+    <string name="label_cancel">Cancel</string>
+    <string name="progress_logout">Logging out</string>
     <string name="label_weather_today">Weather Today</string>
     <string name="label_weather_history">History</string>
+    <string name="label_degree_celsius">%s \u2103</string>
+    <string name="label_sunrise">Sunrise: </string>
+    <string name="label_sunset">Sunset: </string>
 
 </resources>

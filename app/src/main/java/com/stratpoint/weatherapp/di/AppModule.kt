@@ -13,10 +13,12 @@ import com.stratpoint.weatherapp.data.database.DbConstants
 import com.stratpoint.weatherapp.data.network.RetrofitBuilder
 import com.stratpoint.weatherapp.presentation.home.current_weather.DefaultLocationTracker
 import com.stratpoint.weatherapp.presentation.home.current_weather.LocationTracker
+import com.stratpoint.weatherapp.presentation.home.data.service.WeatherApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import retrofit2.Retrofit
 import javax.inject.Singleton
 
 @Module
@@ -47,9 +49,15 @@ object AppModule {
         context: Context
     ) = RetrofitBuilder.createRetrofitInstance(
         context,
-        "",
+        "https://api.openweathermap.org/data/2.5/",
         BuildConfig.DEBUG
     )
+
+    @Singleton
+    @Provides
+    fun provideWeatherApiService(
+        retrofit: Retrofit
+    ): WeatherApiService = retrofit.create(WeatherApiService::class.java)
 
     @Provides
     @Singleton

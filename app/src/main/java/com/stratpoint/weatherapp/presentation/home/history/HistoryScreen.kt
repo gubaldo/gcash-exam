@@ -14,18 +14,16 @@ import com.stratpoint.weatherapp.ui.theme.WeatherAppTheme
 
 @Composable
 fun HistoryScreen(
-    modifier: Modifier,
-    navigateToAuth: () -> Unit,
+    modifier: Modifier
 ) {
 
-    HistoryContent(modifier = modifier, navigateToAuth)
+    HistoryContent(modifier = modifier)
 
 }
 
 @Composable
 fun HistoryContent(
-    modifier: Modifier,
-    navigateToAuth: () -> Unit
+    modifier: Modifier
 ) {
     Box(
         modifier
@@ -34,7 +32,6 @@ fun HistoryContent(
         contentAlignment = Alignment.Center
     ) {
         ClickableText(text = AnnotatedString("History Screen")) {
-            navigateToAuth()
         }
     }
 }
@@ -43,6 +40,6 @@ fun HistoryContent(
 @Composable
 private fun HistoryPreview() {
     WeatherAppTheme {
-        HistoryContent(modifier = Modifier, {})
+        HistoryContent(modifier = Modifier)
     }
 }

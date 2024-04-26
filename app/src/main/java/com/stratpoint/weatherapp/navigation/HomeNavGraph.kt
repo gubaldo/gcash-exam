@@ -14,8 +14,7 @@ import com.stratpoint.weatherapp.presentation.home.history.HistoryScreen
 @Composable
 fun HomeNavGraph(
     modifier: Modifier = Modifier,
-    homeNavController: NavHostController,
-    navigateToAuth: () -> Unit
+    homeNavController: NavHostController
 ) {
 
     //Create new NavHost for BottomNavBar
@@ -27,13 +26,12 @@ fun HomeNavGraph(
 
         composable(route = HomeScreen.CurrentWeather.route) {
             CurrentWeatherScreen(
-                modifier = modifier,
-                navigateToAuth
+                modifier = modifier
             )
         }
 
         composable(route = HomeScreen.History.route) {
-            HistoryScreen(modifier, navigateToAuth)
+            HistoryScreen(modifier)
         }
 
     }
