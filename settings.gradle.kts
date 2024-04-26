@@ -214,7 +214,6 @@ dependencyResolutionManagement {
             version("mockitoInlineVersion", "5.1.0")
             version("archCoreVersion", "2.2.0")
             version("kotlinxCoroutinesVersion", "1.8.0")
-            version("turbineVersion", "0.12.1")
 
             // Local Test
             library("junit", "junit", "junit").versionRef("junitVersion")
@@ -238,11 +237,6 @@ dependencyResolutionManagement {
                 "org.jetbrains.kotlinx",
                 "kotlinx-coroutines-test"
             ).versionRef("kotlinxCoroutinesVersion")
-            library(
-                "turbine",
-                "app.cash.turbine",
-                "turbine"
-            ).versionRef("turbineVersion")
 
             // UI Androidx JUnit
             library(
@@ -284,7 +278,6 @@ dependencyResolutionManagement {
                     "mockito-kotlin",
                     "mockito-inline",
                     "arch-core",
-                    "turbine",
                     "kotlinx-coroutines"
                 )
             )
